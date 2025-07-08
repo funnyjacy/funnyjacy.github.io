@@ -2,35 +2,236 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>My test page</title>
-  <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-  <link href="styles/style.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三维识别项目</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-image: linear-gradient(90deg, #e0c3fc 0%, #8ec5fc 100%);
+            margin: 0;
+            padding: 5px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin: 5px 0;
+            height: 300px;
+        }
+
+        #canvas_left {
+            height: 300px;
+            width: 600px;
+        }
+
+        canvas {
+            margin: 5px;
+            border: 1px solid black;
+            width: 100%;
+            max-width: 600px;
+            height: 150px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 5px 0;
+            font-size: 24px;
+        }
+
+        .input {
+            display: flex;
+            flex-direction: column;
+            border: 2px rgb(34, 243, 2) solid;
+            padding: 5px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        button {
+            width: 80px;
+            margin: 5px;
+            padding: 3px;
+            font-size: 12px;
+        }
+
+        input[type="file"],
+        input[type="text"] {
+            width: 50px;
+            margin: 2px;
+            font-size: 10px;
+            padding: 2px;
+        }
+
+        .total {
+            display: flex;
+            flex-direction: row;
+            padding: 5px;
+            gap: 5px;
+            width: 100%;
+            max-width: 100vw;
+            box-sizing: border-box;
+        }
+
+        .canvas_show {
+            width: 100%;
+            max-width: 600px;
+            height: 180px;
+            margin: 5px 0;
+        }
+
+        .canvas-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .parameter {
+            display: flex;
+            flex-direction: column;
+            margin-left: 5px;
+            border: 1px dotted yellow;
+            padding: 3px;
+        }
+
+        .parameter div {
+            margin: 2px 0;
+        }
+
+        .parameter span {
+            font-size: 12px;
+        }
+
+        .choice {
+            margin: 2px 0;
+        }
+
+        .setup {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            padding-right: 0;
+        }
+    </style>
 </head>
 
 <body>
-  <h1>Mozilla is cool</h1>
-  <img src="images/firefox-icon.png" alt="The Firefox logo: a flaming fox surrounding the Earth.">
+    <div class="total">
+        <div class="input">
+            <div>
+                <h1>图形消除器</h1>
+            </div>
+            <div class="canvas-container">
+                <canvas id="canvas_left"></canvas>
+            </div>
+            <div class="setup">
+                <div class="parameter">
+                    <span style="font-size: larger;">处理参数</span>
+                    <div>
+                        <span>检测阈值</span>
+                        <input type="number" min="0" step="0.05" value="0.1">
+                    </div>
+                    <div>
+                        <span>文本阈值</span>
+                        <input type="number" min="0" step="0.05" value="0.1">
+                    </div>
+                    <div>
+                        <span>掩膜扩展</span>
+                        <input type="number" min="0" step="0.05" value="0.1">
+                    </div>
+                    <div>
+                        <span>最小深度(米)</span>
+                        <input type="number" min="0" step="0.05" value="0.1">
+                    </div>
+                    <div>
+                        <span>最大深度(米)</span>
+                        <input type="number" min="0" step="0.05" value="0.1">
+                    </div>
+                </div>
+                <div class="parameter">
+                    <span style="font-size: larger;">输入设置</span>
+                    <div>
+                        <input type="radio" name="fileMode" id="single"><label for="single">单文件模式</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="fileMode" id="multiple"><label for="multiple">多文件模式</label>
+                    </div>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+                <div class="parameter">
+                    <span style="font-size: larger;">处理控制</span>
+                    <span>提示词</span>
+                    <div>
+                        <input type="text" id="text">
+                        <button class="choice" id="translate">翻译</button>
+                    </div>
+                    <button class="choice">开始处理</button>
+                    <button class="choice">停止</button>
+                    <progress id="file"></progress>
+                    <button class="choice">处理完成</button>
+                </div>
+            </div>
 
-  <p>At Mozilla, we’re a global community of</p>
 
-  <ul> <!-- changed to list in the tutorial -->
-    <li>technologists</li>
-    <li>thinkers</li>
-    <li>builders</li>
-  </ul>
+        </div>
+        <div class="input">
+            <div class="canvas-group">
+                <canvas class="canvas_show" id="canvas_first"></canvas>
+                <canvas class="canvas_show" id="canvas_middle"></canvas>
+                <canvas class="canvas_show" id="canvas_buttom"></canvas>
+            </div>
+        </div>
+    </div>
 
-  <p>working together to keep the Internet alive and accessible, so people worldwide can be informed contributors and
-    creators of the Web. We believe this act of human collaboration across an open platform is essential to individual
-    growth and our collective future.</p>
-
-  <p>Read the <a href="https://www.mozilla.org/en-US/about/manifesto/">Mozilla Manifesto</a> to learn even more about
-    the values and principles that guide the pursuit of our mission.</p>
-  <!-- <button>Change user</button> -->
-   <button>Change user</button>
-  <script src="./scripts/main.js"></script>
 </body>
+<script>
+    const canvas_left = document.getElementById("canvas_left");
+    const ctx_left = canvas_left.getContext('2d');
 
+    // 动态设置画布分辨率
+    canvas_left.width = canvas_left.offsetWidth;
+    canvas_left.height = canvas_left.offsetHeight;
+
+    const canvases = ["canvas_first", "canvas_middle", "canvas_buttom"];
+    canvases.forEach(id => {
+        const canvas = document.getElementById(id);
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    });
+
+    // 上传图片
+    const imageInput = document.getElementById('imageInput');
+    imageInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    ctx_left.clearRect(0, 0, canvas_left.width, canvas_left.height);
+                    const scale = Math.min(
+                        canvas_left.width / img.width,
+                        canvas_left.height / img.height
+                    );
+                    const width = img.width * scale;
+                    const height = img.height * scale;
+                    const x = (canvas_left.width - width) / 2;
+                    const y = (canvas_left.height - height) / 2;
+                    ctx_left.drawImage(img, x, y, width, height);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 
 </html>
